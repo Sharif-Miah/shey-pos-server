@@ -1,0 +1,50 @@
+[
+    {
+        "name": "Grapes",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213128/grapes_op0czu.jpg",
+        "price": 7,
+        "category": "fruits"
+    },
+    {
+        "name": "Oranges",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213124/orange_stdijn.jpg",
+        "price": 5,
+        "category": "fruits"
+    },
+    {
+        "name": "Mangoes",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213115/mango_mxyczp.jpg",
+        "price": 10,
+        "category": "fruits"
+    },
+    {
+        "name": "Cabbage",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213116/cabbage_ovryzh.jpg",
+        "price": 8,
+        "category": "vegetables"
+    },
+    {
+        "name": "Tometo",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213110/tometo_bzi2nw.jpg",
+        "price": 4,
+        "category": "vegetables"
+    },
+    {
+        "name": "Brinjol",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213110/brinjol_a3eppx.jpg",
+        "price": 6,
+        "category": "vegetables"
+    },
+    {
+        "name": "Chicken",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213110/chicken_ar3jpq.jpg",
+        "price": 20,
+        "category": "meat"
+    },
+    {
+        "name": "Mutton",
+        "image": "https://res.cloudinary.com/dnuxd0pd0/image/upload/v1756213110/mutton_ib0cmw.jpg",
+        "price": 25,
+        "category": "meat"
+    }
+]
