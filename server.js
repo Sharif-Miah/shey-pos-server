@@ -3,6 +3,7 @@ const dbConnect = require('./dbConnect');
 const cors = require('cors');
 const app = express();
 app.use(cors());
+dbConnect();
 app.use(express.json());
 const itemsRoute = require('./routes/itemRoutes');
 
