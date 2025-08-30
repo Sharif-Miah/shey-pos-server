@@ -14,8 +14,14 @@ router.get('/get-all-items', async (req, res) => {
 router.post('/add-item', async (req, res) => {
   try {
     const newItem = new itemModel(req.body);
+    const value = {
+      name: req.body.name,
+      price: parseFloat(req.body.price),
+      image: req.body.image,
+      category: req.body.category,
+    };
     await newItem.save();
-    res.send('Item added successfully');
+    res.status(200).json({ massage: 'Item added successfully' });
   } catch (error) {
     res.status(404).json(error);
   }
