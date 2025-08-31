@@ -1,11 +1,7 @@
 {
   "name": "shey-pos-server",
   "version": "1.0.0",
-<<<<<<< HEAD
     "main": "server.js",
-=======
-  "main": "server.js",
->>>>>>> 8bd7ff9e8e1725da97dfba545fd778c6bc10332c
   "scripts": {
     "start": "node server.js"
   },
