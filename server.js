@@ -6,8 +6,10 @@ app.use(cors());
 dbConnect();
 app.use(express.json());
 const itemsRoute = require('./routes/itemRoutes');
+const userRoute = require('./routes/userRoutes');
 
 app.use('/api/items/', itemsRoute);
+app.use('/api/users/', userRoute);
 const port = 3000;
 
 app.get('/', (req, res) => res.send('Hello World! from Api.'));
