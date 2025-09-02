@@ -5,7 +5,7 @@ const usersSchema = mongoose.Schema(
     name: { type: String, required: true },
     userId: { type: String, required: true },
     password: { type: String, required: true },
-    varifed: { type: Boolean, required: false },
+    varified: { type: Boolean, required: false },
   },
   {
     timestamps: true,
