@@ -7,9 +7,11 @@ dbConnect();
 app.use(express.json());
 const itemsRoute = require('./routes/itemRoutes');
 const userRoute = require('./routes/userRoutes');
+const billRoute = require('./routes/billRoutes');
 
 app.use('/api/items/', itemsRoute);
 app.use('/api/users/', userRoute);
+app.use('/api/bill/', billRoute);
 const port = 3000;
 
 app.get('/', (req, res) => res.send('Hello World! from Api.'));

@@ -10,7 +10,7 @@ router.post('/login', async (req, res) => {
       varified: true,
     });
     if (user) {
-      res.send('User Login Successfully');
+      res.status(200).json(user);
     } else {
       res.status(500).json({ message: 'Login faild' }, user);
     }
