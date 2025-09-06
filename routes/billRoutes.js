@@ -21,5 +21,13 @@ router.post('/charge-bill', async (req, res) => {
     res.status(404).json(error);
   }
 });
+router.get('/get-all-bill', async (req, res) => {
+  try {
+    const bill = await billModel.find();
+    res.send(bill);
+  } catch (error) {
+    res.status(404).json(error);
+  }
+});
 
 module.exports = router;
