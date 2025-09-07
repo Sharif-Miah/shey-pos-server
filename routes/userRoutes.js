@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
       userId: req.body.userId,
       password: req.body.password,
     };
-    const users = new usersModel({ ...req.body, varified: false });
+    const users = new usersModel({ ...req.body, varified: true });
 
     await users.save();
     res.status(200).json({ massage: 'User Registered Successfully' });
@@ -34,15 +34,5 @@ router.post('/register', async (req, res) => {
     res.status(404).json(error);
   }
 });
-
-// router.post('/register', async (req, res) => {
-//   try {
-//     const newUser = await usersModel.find();
-//     await newUser.save();
-//     res.send('User Registered Successfully', newUser);
-//   } catch (error) {
-//     res.status(500).json(error);
-//   }
-// });
 
 module.exports = router;
