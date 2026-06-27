@@ -1,24 +1,21 @@
+require('dotenv').config();
 const mongoose = require('mongoose');
 
-const URI = `mongodb+srv://sheypos:sheypos@cluster0.ejrpgrq.mongodb.net/sheypos`;
+const URI = process.env.MONGO_URL || 'mongodb://127.0.0.1:27017/sheypos';
 
 let connectionObj = mongoose.connection;
 
-connectionObj.on('connection', () => {
-  console.log('MongoDB connection on successfully.');
+connectionObj.on('connected', () => {
+  console.log('MongoDB connection successfully established.');
 });
 
-connectionObj.on('error', () => {
-  console.log('MongoDB connection failed.');
+connectionObj.on('error', (err) => {
+  console.log('MongoDB connection failed:', err.message);
 });
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-
+    const conn = await mongoose.connect(URI);
     console.log(`MongoDB connected : ${conn.connection.host}`);
   } catch (err) {
     console.error(`Error: ${err.message}`);
@@ -27,3 +24,4 @@ const connectDB = async () => {
 };
 
 module.exports = connectDB;
+

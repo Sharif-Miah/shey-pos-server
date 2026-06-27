@@ -1,15 +1,17 @@
 {
   "name": "shey-pos-server",
   "version": "1.0.0",
-    "main": "server.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "seed": "node seed.js"
   },
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^17.4.2",
     "express": "^5.1.0",
     "mongoose": "^8.18.0",
     "nodemon": "^3.1.10"

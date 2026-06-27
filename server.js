@@ -3,6 +3,10 @@ const dbConnect = require('./dbConnect');
 const cors = require('cors');
 const app = express();
 app.use(cors());
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, private');
+  next();
+});
 dbConnect();
 app.use(express.json());
 const itemsRoute = require('./routes/itemRoutes');
