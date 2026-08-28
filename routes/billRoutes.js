@@ -1,6 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const billModel = require('../models/billModel');
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
 const router = express.Router();
 
 // Stripe Checkout Session Create Endpoint
@@ -83,10 +84,15 @@ router.post('/charge-bill', async (req, res) => {
     };
     const newBill = new billModel(value);
 
-    await newBill.save();
-    res.status(200).json({ massage: 'Bill Item added successfully' });
+    const savedBill = await newBill.save();
+    res.status(200).json({
+      massage: 'Bill Item added successfully',
+      message: 'Bill Item added successfully',
+      bill: savedBill,
+      _id: savedBill._id,
+    });
   } catch (error) {
-    res.status(404).json(error);
+    res.status(500).json({ message: error.message, error });
   }
 });
 
@@ -95,7 +101,41 @@ router.get('/get-all-bill', async (req, res) => {
     const bill = await billModel.find();
     res.send(bill);
   } catch (error) {
-    res.status(404).json(error);
+    res.status(500).json({ message: error.message, error });
+  }
+});
+
+// একটি নির্দিষ্ট বিল আইডি দিয়ে বিল আনার এন্ডপয়েন্ট (QR কোড এবং পাবলিক ইনভয়েসের জন্য)
+router.get('/get-bill-by-id', async (req, res) => {
+  try {
+    const billId = req.query.id || req.query.billId;
+    if (!billId) {
+      return res.status(400).json({ message: 'Bill ID is required' });
+    }
+    const bill = await billModel.findById(billId);
+    if (!bill) {
+      return res.status(404).json({ message: 'Bill not found' });
+    }
+    res.status(200).json(bill);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// URL Param হিসেবেও অ্যাক্সেস করার রাউট: /api/bill/get-bill-by-id/:id
+router.get('/get-bill-by-id/:id', async (req, res) => {
+  try {
+    const billId = req.params.id;
+    if (!billId) {
+      return res.status(400).json({ message: 'Bill ID is required' });
+    }
+    const bill = await billModel.findById(billId);
+    if (!bill) {
+      return res.status(404).json({ message: 'Bill not found' });
+    }
+    res.status(200).json(bill);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
