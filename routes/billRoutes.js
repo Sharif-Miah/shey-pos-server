@@ -12,7 +12,6 @@ router.post('/create-checkout-session', async (req, res) => {
       return res.status(400).json({ message: 'Cart items are required' });
     }
 
-    // Cart items কে Stripe ফরম্যাটে রূপান্তর
     const line_items = cartItems.map((item) => {
       const isValidImage =
         item.image &&
