@@ -4,34 +4,60 @@ const router = express.Router();
 
 router.post('/login', async (req, res) => {
   try {
+    const { email, userId, password } = req.body;
+    const identifier = email || userId;
+
+    if (!identifier || !password) {
+      return res.status(400).json({ message: 'Email/UserId and Password are required' });
+    }
+
     const user = await usersModel.findOne({
-      userId: req.body.userId,
-      password: req.body.password,
+      $or: [{ email: identifier }, { userId: identifier }],
+      password: password,
       varified: true,
     });
+
     if (user) {
       res.status(200).json(user);
     } else {
-      res.status(500).json({ message: 'Login faild' }, user);
+      res.status(400).json({ message: 'Login failed: Invalid credentials or user not verified' });
     }
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message || 'Server error' });
   }
 });
 
 router.post('/register', async (req, res) => {
   try {
-    const value = {
-      name: req.body.name,
-      userId: req.body.userId,
-      password: req.body.password,
-    };
-    const users = new usersModel({ ...req.body, varified: true });
+    const { name, email, userId, password } = req.body;
 
-    await users.save();
-    res.status(200).json({ massage: 'User Registered Successfully' });
+    if (!name || !password || (!email && !userId)) {
+      return res.status(400).json({ message: 'Name, Email and Password are required' });
+    }
+
+    const userEmail = email || userId;
+
+    // Check if user already exists
+    const existingUser = await usersModel.findOne({
+      $or: [{ email: userEmail }, { userId: userEmail }],
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists with this email' });
+    }
+
+    const newUser = new usersModel({
+      name,
+      email: userEmail,
+      userId: userId || userEmail,
+      password,
+      varified: true,
+    });
+
+    await newUser.save();
+    res.status(200).json({ massage: 'User Registered Successfully', message: 'User Registered Successfully' });
   } catch (error) {
-    res.status(404).json(error);
+    res.status(500).json({ message: error.message || 'Registration failed' });
   }
 });
 

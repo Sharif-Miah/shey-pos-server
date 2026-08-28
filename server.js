@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const dbConnect = require('./dbConnect');
 const cors = require('cors');
@@ -16,7 +17,8 @@ const billRoute = require('./routes/billRoutes');
 app.use('/api/items/', itemsRoute);
 app.use('/api/users/', userRoute);
 app.use('/api/bill/', billRoute);
-const port = 3000;
+app.use('/api/bills/', billRoute);
+const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => res.send('Hello World! from Api.'));
 app.listen(port, () =>
