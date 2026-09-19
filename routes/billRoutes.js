@@ -1,8 +1,12 @@
 require('dotenv').config();
 const express = require('express');
 const billModel = require('../models/billModel');
+const itemModel = require('../models/itemModel');
 const stripe = process.env.STRIPE_SECRET_KEY ? require('stripe')(process.env.STRIPE_SECRET_KEY) : null;
 const router = express.Router();
+
+const ItemModel = itemModel;
+const BillModel = billModel;
 
 // Stripe Checkout Session Create Endpoint
 router.post('/create-checkout-session', async (req, res) => {
@@ -73,26 +77,35 @@ router.post('/create-checkout-session', async (req, res) => {
 
 router.post('/charge-bill', async (req, res) => {
   try {
-    const value = {
-      customerName: req.body.customerName,
-      customerPhoneNumber: req.body.customerPhoneNumber,
-      totalAmount: parseFloat(req.body.totalAmount),
-      tax: parseFloat(req.body.tax),
-      subTotal: parseFloat(req.body.subTotal),
-      paymentMode: req.body.paymentMode,
-      cartItems: req.body.cartItems,
-    };
-    const newBill = new billModel(value);
-
-    const savedBill = await newBill.save();
-    res.status(200).json({
-      massage: 'Bill Item added successfully',
-      message: 'Bill Item added successfully',
-      bill: savedBill,
-      _id: savedBill._id,
-    });
+    const { cartItems } = req.body;
+    // ১. পর্যাপ্ত স্টক আছে কি না যাচাই
+    if (cartItems && Array.isArray(cartItems)) {
+      for (const item of cartItems) {
+        const dbItem = await ItemModel.findById(item._id);
+        if (!dbItem) {
+          return res.status(404).json({ message: `Product ${item.name || 'Item'} not found!` });
+        }
+        if (dbItem.stock < item.quantity) {
+          return res.status(400).json({ 
+            message: `Insufficient stock for ${dbItem.name}! Available stock is ${dbItem.stock}` 
+          });
+        }
+      }
+    }
+    // ২. বিল সেভ করা
+    const newBill = new BillModel(req.body);
+    await newBill.save();
+    // ৩. প্রতিটি আইটেমের স্টক স্বয়ংক্রিয়ভাবে ডাটাবেজ থেকে বিয়োগ ($inc: -quantity)
+    if (cartItems && Array.isArray(cartItems)) {
+      for (const item of cartItems) {
+        await ItemModel.findByIdAndUpdate(item._id, {
+          $inc: { stock: -item.quantity }
+        });
+      }
+    }
+    res.send('Bill charged and stock updated successfully');
   } catch (error) {
-    res.status(500).json({ message: error.message, error });
+    res.status(500).json({ message: error.message });
   }
 });
 

@@ -11,29 +11,43 @@ router.get('/get-all-items', async (req, res) => {
   }
 });
 
+const ItemModel = itemModel;
+
 router.post('/add-item', async (req, res) => {
   try {
-    const value = {
+    const newItem = new ItemModel({
       name: req.body.name,
-      price: parseFloat(req.body.price),
-      image: req.body.image,
+      price: req.body.price,
       category: req.body.category,
-    };
-    const newItem = new itemModel(value);
-
+      image: req.body.image,
+      barcode: req.body.barcode || undefined,
+      stock: Number(req.body.stock) || 0,
+      lowStockThreshold: Number(req.body.lowStockThreshold) || 5,
+    });
     await newItem.save();
-    res.status(200).json({ massage: 'Item added successfully' });
+    res.send('Item added successfully');
   } catch (error) {
-    res.status(404).json(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
 router.post('/edit-item', async (req, res) => {
   try {
-    await itemModel.findOneAndUpdate({ _id: req.body.itemId }, req.body);
-    res.send('Item Updated Successfully.');
+    await ItemModel.findOneAndUpdate(
+      { _id: req.body.itemId },
+      {
+        name: req.body.name,
+        price: req.body.price,
+        category: req.body.category,
+        image: req.body.image,
+        barcode: req.body.barcode || undefined,
+        stock: Number(req.body.stock) || 0,
+        lowStockThreshold: Number(req.body.lowStockThreshold) || 5,
+      }
+    );
+    res.send('Item updated successfully');
   } catch (error) {
-    res.status(500).json(error);
+    res.status(500).json({ message: error.message });
   }
 });
 
